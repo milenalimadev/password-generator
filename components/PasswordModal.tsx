@@ -6,17 +6,25 @@ import {
   Pressable
 } from "react-native";
 import * as clipboard from "expo-clipboard"
+import useStorage from "@/hooks/useStorage";
 
 interface PasswordModalProps {
   password: string,
-  handleVisibleModal: () => void,
-  savePassword: () => void
+  handleVisibleModal: () => void
 }
 
-export function PasswordModal({ password, handleVisibleModal, savePassword }: PasswordModalProps) {
+export function PasswordModal({ password, handleVisibleModal }: PasswordModalProps) {
+  const { saveItem, getItem } = useStorage()
+
   async function handleCopyPassword() {
     await clipboard.setStringAsync(password)
     alert("Senha copiada!")
+    handleVisibleModal();
+  }
+
+  async function savePassword() {
+    await saveItem("@pass", password)
+    alert("Senha salva com sucesso!")
     handleVisibleModal();
   }
 
@@ -28,12 +36,12 @@ export function PasswordModal({ password, handleVisibleModal, savePassword }: Pa
           <Text style={styles.text}>{password}</Text>
         </Pressable>
         <View style={styles.buttonArea}>
-          <TouchableOpacity style={[styles.button, styles.backButton]} onPress={handleVisibleModal}>
+          <TouchableOpacity style={styles.button} onPress={handleVisibleModal}>
             <Text style={styles.textButton}>Voltar</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.button, styles.saveButton]} onPress={savePassword}>
-            <Text style={styles.textSaveButton}>Salvar</Text>
+          <TouchableOpacity style={styles.button} onPress={savePassword}>
+            <Text style={[styles.textButton, styles.textSaveButton]}>Salvar</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -85,21 +93,21 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center", 
     paddingVertical: 8,
-    borderRadius: 8
+    borderRadius: 8,
+    backgroundColor: "#35cdce"
   }, 
   textButton: {
     fontSize: 15,
-    color: "0e0e0e"
-  }, 
-  backButton: {
-    borderWidth: 1,
-    borderColor: "#35cdce"
-  },
-  saveButton: {
-    backgroundColor: "#35cdce"
-  },
-  textSaveButton: {
     color: "#FFF",
+  }, 
+  // backButton: {
+  //   borderWidth: 1,
+  //   borderColor: "#35cdce"
+  // },
+  // saveButton: {
+  //   backgroundColor: "#35cdce"
+  // },
+  textSaveButton: {
     fontWeight: "bold"
   }
 })

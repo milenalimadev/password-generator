@@ -5,12 +5,15 @@ import {
   StyleSheet, 
   Image, 
   TouchableOpacity, 
-  Modal
+  Modal,
+  Dimensions
 } from "react-native";
 import Slider from "@react-native-community/slider";
 import { PasswordModal } from "@/components/PasswordModal";
 
 let charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+const widthWindow = Dimensions.get("screen").width
 
 export default function Generator() {
   const [passwordSize, setPasswordSize] = useState(6);
@@ -66,7 +69,6 @@ export default function Generator() {
         <PasswordModal 
           password={passwordValue} 
           handleVisibleModal={() => setModalVisible(!modalVisible)}
-          savePassword={() => {}}
         />
       </Modal>
     </View>
@@ -82,7 +84,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: "70%",
-    height: window.innerWidth * 0.7,
+    height: widthWindow * 0.7,
     marginBottom: 20
   },
   title: {
